@@ -93,9 +93,9 @@ class Api
     /**
      * @throws Exception
      */
-    public function convert(string $from, string $to, float $amount): float
+    public function convert(string $from, string $to, float $amount, ?bool $fromCrypto = false): float
     {
-        return $amount / $this->getRate($from, $to);
+        return empty($fromCrypto) ? $amount / $this->getRate($from, $to) : $amount * $this->getRate($to, $from);
     }
 
     private function getCacheFilePath(string $currency): string
