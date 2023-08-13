@@ -68,8 +68,16 @@ class Api
             if (empty($ignoreExceptions)) {
                 throw new Exception($exception->getMessage());
             }
-            $cachedData = json_decode(file_get_contents($this->getCacheFilePath($currency)), true);
-            return (empty($cachedData) || empty($cachedData['data']) || empty($cachedData['data']['rates'])) ? [] : $cachedData['data']['rates'];
+            return
+                (
+                    empty($cachePath = $this->getCacheFilePath($currency))
+                    || !file_exists($cachePath)
+                    || empty($cachedData = json_decode(file_get_contents($cachePath), true))
+                    || empty($cachedData['data'])
+                    || empty($cachedData['data']['rates'])
+                )
+                    ? []
+                    : $cachedData['data']['rates'];
         }
     }
 
